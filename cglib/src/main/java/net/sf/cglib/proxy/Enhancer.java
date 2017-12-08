@@ -68,7 +68,10 @@ public class Enhancer extends AbstractClassGenerator
         }
     };
 
+    //继承于父类的内部类
     private static final Source SOURCE = new Source(Enhancer.class.getName());
+
+    //
     private static final EnhancerKey KEY_FACTORY =
       (EnhancerKey)KeyFactory.create(EnhancerKey.class, KeyFactory.HASH_ASM_TYPE, null);
 

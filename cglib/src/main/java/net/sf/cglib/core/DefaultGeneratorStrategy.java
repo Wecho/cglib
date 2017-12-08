@@ -36,11 +36,12 @@ public class DefaultGeneratorStrategy implements GeneratorStrategy {
 	throw new UnsupportedOperationException("You are calling " +
 		"getClassWriter, which no longer exists in this cglib version.");
     }
-    
+
+    //提供子类修改方法
     protected byte[] transform(byte[] b) throws Exception {
         return b;
     }
-
+    //提供子类修改方法
     protected ClassGenerator transform(ClassGenerator cg) throws Exception {
         return cg;
     }

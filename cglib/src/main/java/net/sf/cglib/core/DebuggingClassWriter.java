@@ -34,6 +34,7 @@ public class DebuggingClassWriter extends ClassVisitor {
     private String superName;
     
     static {
+        //从系统属性中获取debugLocation
         debugLocation = System.getProperty(DEBUG_LOCATION_PROPERTY);
         if (debugLocation != null) {
             System.err.println("CGLIB debugging enabled, writing to '" + debugLocation + "'");

@@ -39,17 +39,33 @@ implements ClassGenerator
 
     private static volatile Map<ClassLoader, ClassLoaderData> CACHE = new WeakHashMap<ClassLoader, ClassLoaderData>();
 
+    //提供生成bytecode的方法
     private GeneratorStrategy strategy = DefaultGeneratorStrategy.INSTANCE;
+
+    //提供生成ClassName的方法
     private NamingPolicy namingPolicy = DefaultNamingPolicy.INSTANCE;
+
+    //静态内部类,用于生成ClassName
     private Source source;
+
+    //ClassLoader
     private ClassLoader classLoader;
+
+    //生成的新类前缀
     private String namePrefix;
+
     private Object key;
+
+    //是否使用缓存,默认 true
     private boolean useCache = true;
+
     private String className;
+
     private boolean attemptLoad;
 
+
     protected static class ClassLoaderData {
+        //存储的类名
         private final Set<String> reservedClassNames = new HashSet<String>();
 
         /**
@@ -60,7 +76,7 @@ implements ClassGenerator
          * <p>Note: the only way to access a class is to find it through generatedClasses cache, thus
          * the key should not expire as long as the class itself is alive (its classloader is alive).</p>
          */
-        private final LoadingCache<AbstractClassGenerator, Object, Object> generatedClasses;
+        private final LoadingCache<AbstractClassGenerator, Object, Object> generatedClasses;//已生成的类
 
         /**
          * Note: ClassLoaderData object is stored as a value of {@code WeakHashMap<ClassLoader, ...>} thus
@@ -134,6 +150,10 @@ implements ClassGenerator
         }
     }
 
+    /**
+     * 抽象类的构造方法,建议修饰为protected
+     * @param source
+     */
     protected AbstractClassGenerator(Source source) {
         this.source = source;
     }
@@ -142,6 +162,10 @@ implements ClassGenerator
         this.namePrefix = namePrefix;
     }
 
+    /**
+     * 只给子类调用,不能修改
+     * @return
+     */
     final protected String getClassName() {
         return className;
     }
@@ -150,6 +174,7 @@ implements ClassGenerator
         this.className = className;
     }
 
+    //生成类名
     private String generateClassName(Predicate nameTestPredicate) {
         return namingPolicy.getClassName(namePrefix, source.name, key, nameTestPredicate);
     }
@@ -270,11 +295,17 @@ implements ClassGenerator
     	return null;
     }
 
+    /**
+     * key code 在子类中调用
+     * @param key 调用的类名?
+     * @return
+     */
     protected Object create(Object key) {
         try {
             ClassLoader loader = getClassLoader();
             Map<ClassLoader, ClassLoaderData> cache = CACHE;
             ClassLoaderData data = cache.get(loader);
+            //
             if (data == null) {
                 synchronized (AbstractClassGenerator.class) {
                     cache = CACHE;
